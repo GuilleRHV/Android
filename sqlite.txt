@@ -1,0 +1,84 @@
+package com.example.biblioteca;
+
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+import androidx.annotation.Nullable;
+
+public class AdminSQLiteOpenHelper extends SQLiteOpenHelper {
+    String nombretabla = "libros";
+    String idcol = "idcol";
+    String autor = "autor";
+    String titulo = "titulo";
+    public AdminSQLiteOpenHelper(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
+        super(context, name, factory, version);
+    }
+
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+
+
+        String query = "CREATE TABLE " + nombretabla + " ("
+                + idcol + " INTEGER PRIMARY KEY , "
+                + autor + " TEXT,"
+                + titulo + " TEXT)";
+        db.execSQL(query);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+    }
+    
+}
+
+
+
+
+
+-------------------------------------------------------------------------
+
+
+
+package com.example.biblioteca;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.os.Bundle;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.view.View;
+
+public class MainActivity extends AppCompatActivity  {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
+
+    public void agregar(View view){
+        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"administracion", null, 1);
+        SQLiteDatabase bd = admin.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+
+        // on below line we are passing all values
+        // along with its key and value pair.
+        values.put("idcol", 2);
+        values.put("autor", "Sanderson");
+        values.put("titulo", "Oathbringer");
+
+
+        // after adding all values we are passing
+        // content values to our table.
+        bd.insert("libros", null, values);
+        bd.close();
+      //  Cursor fila = bd.rawQuery("sentencia SQL", null);
+
+    }
+}
