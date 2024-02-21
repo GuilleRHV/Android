@@ -1,0 +1,89 @@
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.FrameLayout;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // Obtén la referencia al contenedor
+        FrameLayout container = findViewById(R.id.container);
+
+        // Agrega una vista personalizada al contenedor
+        container.addView(new ShapeView(this));
+    }
+
+    // Clase personalizada para dibujar formas
+    private static class ShapeView extends View {
+
+        private final Paint paint;
+        private float x, y; // Coordenadas de la última posición de la pulsación
+
+        public ShapeView(Context context) {
+            super(context);
+
+            // Configurar la pintura para las formas
+            paint = new Paint();
+            paint.setColor(Color.RED);
+            paint.setStyle(Paint.Style.FILL);
+        }
+
+        @Override
+        protected void onDraw(Canvas canvas) {
+            super.onDraw(canvas);
+
+            // Dibujar la forma en la posición de la última pulsación
+            canvas.drawCircle(x, y, 50, paint); // Por ejemplo, un círculo con radio 50
+        }
+
+        @Override
+        public boolean onTouchEvent(MotionEvent event) {
+            // Actualizar las coordenadas al tocar la pantalla
+            x = event.getX();
+            y = event.getY();
+
+            // Redibujar la vista para mostrar la forma en la nueva posición
+            invalidate();
+
+            return true;
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Puedes agregar más vistas o personalizar según tus necesidades -->
+
+    </FrameLayout>
+
+</RelativeLayout>

@@ -1,0 +1,75 @@
+import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.os.Bundle;
+import android.view.View;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(new CircleWithText(this));
+    }
+
+    // Clase personalizada para dibujar el círculo con texto
+    private static class CircleWithText extends View {
+
+        private final Paint circlePaint;
+        private final Paint textPaint;
+
+        public CircleWithText(Context context) {
+            super(context);
+
+            // Configurar pintura para el círculo
+            circlePaint = new Paint();
+            circlePaint.setColor(Color.WHITE);
+            circlePaint.setStyle(Paint.Style.FILL);
+
+            // Configurar pintura para el texto
+            textPaint = new Paint();
+            textPaint.setColor(Color.BLACK);
+            textPaint.setTextSize(30);
+        }
+
+        @Override
+        protected void onDraw(Canvas canvas) {
+            super.onDraw(canvas);
+
+            // Obtener dimensiones del lienzo
+            int canvasWidth = canvas.getWidth();
+            int canvasHeight = canvas.getHeight();
+
+            // Calcular las coordenadas del centro del lienzo
+            float centerX = canvasWidth / 2f;
+            float centerY = canvasHeight / 2f;
+
+            // Calcular el radio del círculo (utilizaremos el 40% del menor de las dimensiones)
+            float radius = 0.4f * Math.min(canvasWidth, canvasHeight);
+
+            // Dibujar el círculo
+            canvas.drawCircle(centerX, centerY, radius, circlePaint);
+
+            // Dibujar el texto en el perímetro externo del círculo
+            String texto = "Esto es un círculo como línea";
+            drawTextOnCircle(canvas, texto, centerX, centerY, radius, textPaint);
+        }
+
+        private void drawTextOnCircle(Canvas canvas, String text, float cx, float cy, float radius, Paint paint) {
+            int numChars = text.length();
+            float angle = 360f / numChars;
+
+            for (int i = 0; i < numChars; i++) {
+                float x = cx + (float) Math.cos(Math.toRadians(i * angle)) * radius;
+                float y = cy + (float) Math.sin(Math.toRadians(i * angle)) * radius;
+
+                // Dibujar el carácter en la posición calculada
+                canvas.drawText(text.substring(i, i + 1), x, y, paint);
+            }
+        }
+    }
+}
